@@ -5,7 +5,7 @@ import { IResponse } from './shared/interfaces/response.interface';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) { }
+  constructor(private readonly appService: AppService) {}
 
   @Get()
   async getHello(): Promise<IResponse<string>> {
