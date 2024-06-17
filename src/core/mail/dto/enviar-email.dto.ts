@@ -4,22 +4,17 @@ export class EnviarEmailDto {
   @IsEmail()
   @IsNotEmpty()
   @IsDefined()
-  destinatario: string | string[];
-
-  @IsEmail()
-  @IsNotEmpty()
-  @IsDefined()
-  remetente: string;
+  to: string | string[];
 
   @IsNotEmpty()
   @IsDefined()
-  locals: any;
+  subject: string;
+
+  @IsNotEmpty()
+  @IsDefined()
+  context: any;
 
   @IsNotEmpty()
   @IsDefined()
   template: string;
-
-  @IsNotEmpty()
-  @IsDefined()
-  conteudo: string;
 }
