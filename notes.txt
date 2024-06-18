@@ -5,3 +5,5 @@ nodemailer
 rabbitmq
 
 docker networks
+
+testes unitários rabbitmq

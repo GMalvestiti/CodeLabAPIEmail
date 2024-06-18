@@ -20,7 +20,7 @@ export class EnviarEmailController {
   async enviarEmail(
     @Payload() data: EnviarEmailDto,
     @Ctx() context: RmqContext,
-  ) {
+  ): Promise<void> {
     const channel = context.getChannelRef() as ChannelRef;
     const originalMessage = context.getMessage() as unknown;
 
@@ -29,7 +29,7 @@ export class EnviarEmailController {
         `recebi mensagem 'enviar-email': ${data.template} - ${data.to}`,
       );
 
-      this.enviarEmailService.enviarWithtemplate(data);
+      await this.enviarEmailService.enviarWithtemplate(data);
 
       channel.ack(originalMessage);
 
