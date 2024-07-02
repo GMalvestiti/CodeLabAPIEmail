@@ -14,7 +14,7 @@ import { EnviarEmailService } from './enviar-email.service';
 export class EnviarEmailController {
   private readonly logger = new Logger(EnviarEmailController.name);
 
-  constructor(private readonly enviarEmailService: EnviarEmailService) {}
+  constructor(private readonly enviarEmailService: EnviarEmailService) { }
 
   @MessagePattern('enviar-email', Transport.RMQ)
   async enviarEmail(
@@ -26,19 +26,16 @@ export class EnviarEmailController {
 
     try {
       this.logger.log(
-        `recebi mensagem 'enviar-email': ${data.template} - ${data.to}`,
+        `receive menssage 'enviar-email': ${data.template} - ${data.to}`,
       );
 
-      await this.enviarEmailService.enviarWithtemplate(data);
-
-      channel.ack(originalMessage);
-
-      this.logger.log(
-        `recebi mensagem 'enviar-email' [OK]: ${data.template} - ${data.to}`,
-      );
+      await this.enviarEmailService.enviarWithTemplate(data);
     } catch (error) {
+      this.logger.error(error.message);
+    } finally {
+      channel.ack(originalMessage);
       this.logger.log(
-        `recebi mensagem 'enviar-email' [ERROR]: ${error.message}`,
+        `recieve message 'enviar-email' [OK]: ${data.template} - ${data.to}`,
       );
     }
   }

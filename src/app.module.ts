@@ -12,7 +12,5 @@ import { MailModule } from './core/mail/mail.module';
     DatabaseModule,
     MailModule,
   ],
-  controllers: [],
-  providers: [],
 })
-export class AppModule {}
+export class AppModule { }

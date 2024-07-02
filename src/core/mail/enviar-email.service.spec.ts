@@ -1,7 +1,7 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { EnviarEmailService } from './enviar-email.service';
 import { MailerService } from '@nestjs-modules/mailer';
+import { Test, TestingModule } from '@nestjs/testing';
 import { EnviarEmailDto } from './dto/enviar-email.dto';
+import { EnviarEmailService } from './enviar-email.service';
 
 describe('EnviarEmailService', () => {
   let service: EnviarEmailService;
@@ -14,6 +14,7 @@ describe('EnviarEmailService', () => {
         {
           provide: MailerService,
           useValue: {
+            constructor: jest.fn(),
             sendMail: jest.fn(),
           },
         },
@@ -28,8 +29,10 @@ describe('EnviarEmailService', () => {
     expect(service).toBeDefined();
   });
 
-  describe(' enviarWithtemplate', () => {
-    it('enviarEmail', () => {
+  describe(' enviarWithTemplate', () => {
+    it('enviar email', () => {
+      const emailService: any = service;
+
       const spy = jest
         .spyOn(mailerService, 'sendMail')
         .mockImplementation(async () => true);
@@ -41,12 +44,14 @@ describe('EnviarEmailService', () => {
         context: {},
       };
 
-      service.enviarWithtemplate(enviarEmailDto);
+      emailService.enviarWithTemplate(enviarEmailDto);
 
       expect(spy).toHaveBeenCalled();
     });
 
-    it('enviarEmail com erros', () => {
+    it('enviar email com erros', () => {
+      const emailService: any = service;
+
       const spy = jest
         .spyOn(mailerService, 'sendMail')
         .mockRejectedValue(new Error('Erro ao enviar email'));
@@ -59,8 +64,8 @@ describe('EnviarEmailService', () => {
       };
 
       try {
-        service.enviarWithtemplate(enviarEmailDto);
-      } catch (error) {
+        emailService.enviarWithTemplate(enviarEmailDto);
+      } catch (error: any) {
         expect(spy).toHaveBeenCalled();
         expect(error.message).toContain('Erro ao enviar email');
       }

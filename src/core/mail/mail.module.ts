@@ -9,18 +9,18 @@ import { EnviarEmailService } from './enviar-email.service';
 @Module({
   imports: [
     MailerModule.forRootAsync({
-      useFactory: (configService: ConfigService) => ({
+      useFactory: async (config: ConfigService) => ({
         transport: {
-          host: configService.get('MAIL_HOST'),
+          host: config.get('MAIL_HOST'),
           secure: true,
           port: 465,
           auth: {
-            user: configService.get('MAIL_USER'),
-            pass: configService.get('MAIL_PASSWORD'),
+            user: config.get('MAIL_USER'),
+            pass: config.get('MAIL_PASSWORD'),
           },
         },
         defaults: {
-          from: `"CodeLAB" <${configService.get('MAIL_USER')}>`,
+          from: `"CodeLAB" <${config.get('MAIL_FROM')}>`,
         },
         template: {
           dir: join(__dirname, 'templates'),
@@ -33,7 +33,7 @@ import { EnviarEmailService } from './enviar-email.service';
       inject: [ConfigService],
     }),
   ],
-  providers: [EnviarEmailService],
   controllers: [EnviarEmailController],
+  providers: [EnviarEmailService],
 })
-export class MailModule {}
+export class MailModule { }

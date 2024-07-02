@@ -6,17 +6,21 @@ import { EnviarEmailDto } from './dto/enviar-email.dto';
 export class EnviarEmailService {
   private readonly logger = new Logger(EnviarEmailService.name);
 
-  constructor(private mailerService: MailerService) {}
+  constructor(private mailerService: MailerService) { }
 
-  async enviarWithtemplate(enviarEmailDto: EnviarEmailDto): Promise<void> {
-    this.logger.log(
-      `enviar email: ${enviarEmailDto.template} - ${enviarEmailDto.to}`,
-    );
+  async enviarWithTemplate(enviarEmailDto: EnviarEmailDto): Promise<void> {
+    try {
+      this.logger.log(
+        `enviar-email: ${enviarEmailDto.template} - ${enviarEmailDto.to}`,
+      );
 
-    await this.mailerService.sendMail(enviarEmailDto);
+      await this.mailerService.sendMail(enviarEmailDto);
 
-    this.logger.log(
-      `enviar email [OK]: ${enviarEmailDto.template} - ${enviarEmailDto.to}`,
-    );
+      this.logger.log(
+        `enviar-email [OK]: ${enviarEmailDto.template} - ${enviarEmailDto.to}`,
+      );
+    } catch (error) {
+      this.logger.error(`enviar-email [ERROR]: ${error.message}`);
+    }
   }
 }

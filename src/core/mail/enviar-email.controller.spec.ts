@@ -1,9 +1,10 @@
+import { MailerService } from '@nestjs-modules/mailer';
+import { ConfigService } from '@nestjs/config';
+import { RmqContext } from '@nestjs/microservices';
 import { Test, TestingModule } from '@nestjs/testing';
+import { EnviarEmailDto } from './dto/enviar-email.dto';
 import { EnviarEmailController } from './enviar-email.controller';
 import { EnviarEmailService } from './enviar-email.service';
-import { RmqContext } from '@nestjs/microservices';
-import { EnviarEmailDto } from './dto/enviar-email.dto';
-import { MailerService } from '@nestjs-modules/mailer';
 
 describe('EnviarEmailController', () => {
   let controller: EnviarEmailController;
@@ -23,10 +24,12 @@ describe('EnviarEmailController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [EnviarEmailController],
       providers: [
+        ConfigService,
         EnviarEmailService,
         {
           provide: MailerService,
           useValue: {
+            constructor: jest.fn(),
             sendMail: jest.fn(),
           },
         },
@@ -42,17 +45,17 @@ describe('EnviarEmailController', () => {
     expect(controller).toBeDefined();
   });
 
-  describe('enviarEmail', () => {
-    it('enviarEmail', async () => {
+  describe('enviarWithTemplate', () => {
+    it('enviar-email', async () => {
       const originalMessage = context.getMessage();
 
       jest.spyOn(channel, 'ack').mockImplementation(() => true);
-      jest.spyOn(service, 'enviarWithtemplate').mockImplementation();
+      jest.spyOn(service, 'enviarWithTemplate').mockImplementation();
 
       const data: EnviarEmailDto = {
-        to: 'teste@teste.com',
-        subject: 'Recuperação de Senha',
-        template: 'recuperacao-senha',
+        to: '',
+        subject: '',
+        template: 'test',
         context: {},
       };
 
@@ -61,22 +64,22 @@ describe('EnviarEmailController', () => {
       expect(channel.ack(originalMessage)).toBe(true);
     });
 
-    it('enviarEmail com erros', async () => {
+    it('enviar-email com erros', async () => {
       jest.spyOn(channel, 'ack').mockImplementation(() => true);
       jest
-        .spyOn(service, 'enviarWithtemplate')
+        .spyOn(service, 'enviarWithTemplate')
         .mockRejectedValue(new Error('Erro ao enviar email'));
 
       try {
         const data: EnviarEmailDto = {
-          to: 'teste@teste.com',
-          subject: 'Recuperação de Senha',
-          template: 'recuperacao-senha',
+          to: '',
+          subject: '',
+          template: 'test',
           context: {},
         };
 
         await controller.enviarEmail(data, context);
-      } catch (error) {
+      } catch (error: any) {
         expect(error.message).toContain('Erro ao enviar email');
       }
     });
