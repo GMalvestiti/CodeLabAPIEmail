@@ -24,8 +24,8 @@ describe('EnviarEmailController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [EnviarEmailController],
       providers: [
-        ConfigService,
         EnviarEmailService,
+        ConfigService,
         {
           provide: MailerService,
           useValue: {

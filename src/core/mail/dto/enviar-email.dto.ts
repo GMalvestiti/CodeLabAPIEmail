@@ -1,4 +1,13 @@
-import { IsDefined, IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsDefined,
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+import Mail from 'nodemailer/lib/mailer';
+import { IEmailAttachment } from 'src/shared/interfaces/email-attachment.interface';
 
 export class EnviarEmailDto {
   @IsEmail()
@@ -20,4 +29,8 @@ export class EnviarEmailDto {
   @IsNotEmpty()
   @IsDefined()
   template: string;
+
+  @IsOptional()
+  @IsArray()
+  attachments: IEmailAttachment[] | Mail.Attachment[];
 }
