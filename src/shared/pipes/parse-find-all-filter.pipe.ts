@@ -16,7 +16,7 @@ export class ParseFindAllFilterPipe implements PipeTransform {
           | IFindAllFilter[];
       }
     } catch (error) {
-      throw new Error(EMensagem.FilterInvalido);
+      throw new Error(EMensagem.FILTER_INVALIDO);
     }
   }
 }
